@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Be My Valentine? 💌 QR</title>
+  <title>Be My Valentine? 💌</title>
   <style>
     body {
       min-height: 100vh;
       margin: 0;
       background: linear-gradient(135deg, #fff0f5, #ffd1dc);
-      font-family: system-ui, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       color: #c2185b;
       display: flex;
       flex-direction: column;
@@ -17,10 +17,15 @@
       justify-content: center;
       padding: 20px;
       text-align: center;
+      overflow: hidden;
     }
-    h1 { font-size: 2.5rem; margin-bottom: 1rem; animation: pulse 3s infinite; }
-    p { font-size: 1.2rem; margin: 10px 0; max-width: 90%; }
+
+    /* Sections */
+    #qr-section, #invite-section, #success-section { display: none; }
+
+    h1 { font-size: 2.5rem; margin-bottom: 1rem; }
     
+    /* QR Section Styles */
     #qrcode {
       background: white;
       padding: 16px;
@@ -29,65 +34,108 @@
       margin: 20px 0;
     }
 
-    .download-btn {
-      background-color: #c2185b;
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      font-size: 1rem;
+    /* Buttons */
+    .btn {
+      padding: 15px 30px;
+      font-size: 1.2rem;
       font-weight: bold;
       border-radius: 50px;
       cursor: pointer;
-      transition: transform 0.2s, background-color 0.2s;
-      text-decoration: none;
-      margin-top: 10px;
-      display: none; /* Hidden until QR is ready */
+      border: none;
+      transition: 0.2s;
+      margin: 10px;
     }
-    .download-btn:hover { background-color: #a3144d; transform: scale(1.05); }
+    .btn-yes { background-color: #c2185b; color: white; }
+    .btn-no { background-color: #ffffff; color: #c2185b; position: absolute; }
 
-    @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+    /* Hearts Animation */
+    .heart {
+      position: absolute;
+      color: #ff4081;
+      font-size: 20px;
+      user-select: none;
+      animation: floatUp 3s linear forwards;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+    }
   </style>
 </head>
 <body>
 
-  <h1>Our Valentine's Invitation 💕</h1>
-  <p>Scan this QR to open the cute invitation page!</p>
+  <div id="qr-section">
+    <h1>Our Valentine's Invitation 💕</h1>
+    <p>Scan this QR with your phone!</p>
+    <div id="qrcode"></div>
+    <p>(Or click the link if testing on PC)</p>
+  </div>
 
-  <div id="qrcode"></div>
+  <div id="invite-section">
+    <h1>Will you be my Valentine? 💖</h1>
+    <div style="height: 100px;"> <button class="btn btn-yes" onclick="showSuccess()">YES!</button>
+      <button id="no-btn" class="btn btn-no" onmouseover="moveButton()" onclick="moveButton()">No</button>
+    </div>
+  </div>
 
-  <a id="download-link" class="download-btn">Download QR Code</a>
-
-  <p style="font-size: 0.9rem; margin-top: 30px; opacity: 0.8;">
-    (Pink theme • High error correction)
-  </p>
+  <div id="success-section">
+    <h1>YEEEYY! I LOVE YOU! 🤟❤️</h1>
+    <p>You've made me the happiest person!</p>
+  </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <script>
-    const qrContainer = document.getElementById("qrcode");
-    const downloadLink = document.getElementById("download-link");
+    const urlParams = new URLSearchParams(window.location.search);
+    const isInvite = urlParams.get('target') === 'invite';
 
-    // 1. Updated with your actual GitHub Pages URL
-    const myUrl = "https://vinahmariehernaezycoy08-hub.github.io/valentine/";
+    // Update this link to YOUR actual GitHub link
+    const myGithubLink = "https://vinahmariehernaezycoy08-hub.github.io/valentine/?target=invite";
 
-    const qrcode = new QRCode(qrContainer, {
-        text: myUrl, 
+    if (isInvite) {
+      // Show the invitation question
+      document.getElementById('invite-section').style.display = 'block';
+    } else {
+      // Show the QR code
+      document.getElementById('qr-section').style.display = 'block';
+      new QRCode(document.getElementById("qrcode"), {
+        text: myGithubLink,
         width: 256,
         height: 256,
         colorDark : "#c2185b",
-        colorLight : "#ffffff",
-        correctLevel : QRCode.CorrectLevel.H
-    });
+        colorLight : "#ffffff"
+      });
+    }
 
-    // 2. Prepare the download link
-    setTimeout(() => {
-        const qrCanvas = qrContainer.querySelector('canvas');
-        if (qrCanvas) {
-            downloadLink.href = qrCanvas.toDataURL("image/png");
-            downloadLink.download = "Valentine_QR.png";
-            downloadLink.style.display = "inline-block";
-        }
-    }, 500);
+    // Function to move the "No" button
+    function moveButton() {
+      const btn = document.getElementById('no-btn');
+      const x = Math.random() * (window.innerWidth - btn.offsetWidth);
+      const y = Math.random() * (window.innerHeight - btn.offsetHeight);
+      btn.style.left = x + 'px';
+      btn.style.top = y + 'px';
+    }
+
+    // Function for when "Yes" is clicked
+    function showSuccess() {
+      document.getElementById('invite-section').style.display = 'none';
+      document.getElementById('success-section').style.display = 'block';
+      
+      // Create lots of hearts
+      for (let i = 0; i < 50; i++) {
+        setTimeout(createHeart, i * 100);
+      }
+    }
+
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.classList.add('heart');
+      heart.innerHTML = '❤️';
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 5000);
+    }
   </script>
 
 </body>
