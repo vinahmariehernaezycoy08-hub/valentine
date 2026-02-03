@@ -23,8 +23,8 @@
     /* Sections */
     #qr-section, #invite-section, #success-section { display: none; z-index: 10; }
 
-    h1 { font-size: 3rem; margin-bottom: 1rem; text-shadow: 2px 2px #ffffff; }
-    p { font-size: 1.3rem; }
+    h1 { font-size: 2.8rem; margin-bottom: 1rem; text-shadow: 2px 2px #ffffff; }
+    p { font-size: 1.2rem; }
     
     /* QR Section Styles */
     #qrcode {
@@ -36,8 +36,16 @@
       margin: 20px 0;
     }
 
-    /* Buttons */
-    .btn-container { height: 150px; position: relative; width: 100%; display: flex; justify-content: center; align-items: center; }
+    /* Buttons Container */
+    .btn-container { 
+      margin-top: 30px;
+      height: 200px; 
+      width: 100%; 
+      display: flex; 
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
     
     .btn {
       padding: 15px 40px;
@@ -46,21 +54,30 @@
       border-radius: 50px;
       cursor: pointer;
       border: none;
-      transition: 0.3s;
+      transition: transform 0.2s;
       box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
-    .btn-yes { background-color: #c2185b; color: white; margin-right: 20px; }
+
+    .btn-yes { 
+      background-color: #c2185b; 
+      color: white; 
+      z-index: 100;
+    }
     .btn-yes:hover { transform: scale(1.1); background-color: #e91e63; }
     
-    .btn-no { background-color: #ffffff; color: #c2185b; position: absolute; }
+    .btn-no { 
+      background-color: #ffffff; 
+      color: #c2185b; 
+      transition: 0.1s;
+      white-space: nowrap;
+    }
 
-    /* Floating Candy Hearts */
+    /* Floating Candy Hearts & Kisses */
     .candy {
       position: absolute;
       user-select: none;
       z-index: 1;
       animation: floatUp 5s linear forwards;
-      font-size: 30px;
     }
 
     @keyframes floatUp {
@@ -71,14 +88,16 @@
     /* Letter Box */
     .letter-box {
       background: white;
-      padding: 30px;
+      padding: 25px;
       border-radius: 20px;
-      max-width: 500px;
-      margin-top: 20px;
-      border: 2px dashed #c2185b;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      max-width: 450px;
+      margin: 20px auto;
+      border: 3px dashed #ff80ab;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
       line-height: 1.6;
+      color: #880e4f;
     }
+    .letter-box h3 { margin-top: 0; color: #c2185b; }
   </style>
 </head>
 <body>
@@ -87,7 +106,7 @@
     <h1>Valentine's Invitation 💋</h1>
     <p>Scan this with your phone!</p>
     <div id="qrcode"></div>
-    <p style="font-size: 0.8rem;">(Or click the link if you're on PC)</p>
+    <p style="font-size: 0.9rem; opacity: 0.7;">(Or click the link if you're on PC)</p>
   </div>
 
   <div id="invite-section">
@@ -102,14 +121,17 @@
     <h1>YEEEYY! I LOVE YOU! 🤟❤️ 💋</h1>
     
     <div class="letter-box">
-      <h3>My Dearest Valentine,</h3>
+      <h3>My Sweetest Valentine,</h3>
       <p>
-        Thank you for saying YES! and for always making my heart skip a beat. 
-        You are the sweetest part of my life, like a box of candies I never want to finish. 
-        I cherish every moment we spend together, and I'm so lucky to have you.
+        Thank you so much for saying <b>YES!</b> You've just made me the happiest person in the world. 
+        I wanted to make this special just for you because you deserve all the sweetness and love today and every day.
       </p>
-      <p><strong>I love you more than words can say!</strong></p>
-      <p>Forever yours, <br> ❤️ [Your Name]</p>
+      <p>
+        You are my favorite person, my best friend, and my whole heart. 
+        I can't wait to celebrate with you! 🍭🍓
+      </p>
+      <p><b>I love you forever!</b></p>
+      <p>Yours always, <br> ❤️ [Your Name]</p>
     </div>
   </div>
 
@@ -119,13 +141,12 @@
     const urlParams = new URLSearchParams(window.location.search);
     const isInvite = urlParams.get('target') === 'invite';
 
-    // UPDATE THIS TO YOUR LINK
+    // Update this to your link
     const myGithubLink = "https://vinahmariehernaezycoy08-hub.github.io/valentine/?target=invite";
 
-    // Show correct section
     if (isInvite) {
       document.getElementById('invite-section').style.display = 'block';
-      startCandyRain(); // Start background candy hearts immediately
+      startCandyRain(); 
     } else {
       document.getElementById('qr-section').style.display = 'block';
       new QRCode(document.getElementById("qrcode"), {
@@ -137,37 +158,37 @@
       });
     }
 
-    // Move the No Button
+    // Fixed "No" button movement
     function moveButton() {
       const btn = document.getElementById('no-btn');
+      btn.style.position = 'fixed'; // Ensures it can move anywhere on screen
       const x = Math.random() * (window.innerWidth - btn.offsetWidth);
       const y = Math.random() * (window.innerHeight - btn.offsetHeight);
       btn.style.left = x + 'px';
       btn.style.top = y + 'px';
     }
 
-    // "YES" Clicked
+    // "YES" logic
     function showSuccess() {
       document.getElementById('invite-section').style.display = 'none';
       document.getElementById('success-section').style.display = 'block';
       
-      // Explosion of hearts and kisses!
-      for (let i = 0; i < 100; i++) {
-        setTimeout(() => createFloatingEmoji(true), i * 50);
+      // Explosion of hearts and kisses
+      for (let i = 0; i < 80; i++) {
+        setTimeout(() => createFloatingEmoji(true), i * 40);
       }
     }
 
-    // Background Candy Hearts Rain
     function startCandyRain() {
-      setInterval(() => createFloatingEmoji(false), 500);
+      setInterval(() => createFloatingEmoji(false), 600);
     }
 
     function createFloatingEmoji(isExplosion) {
-      const emojis = ['💖', '🍬', '🍭', '💗', '🍓', '💋', '❤️', '💌'];
+      const emojis = ['💖', '🍬', '🍭', '💗', '🍓', '💋', '❤️', '💌', '🧁'];
       const el = document.createElement('div');
       el.classList.add('candy');
       el.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
-      
+      el.style.fontSize = (Math.random() * 20 + 20) + 'px';
       el.style.left = Math.random() * 100 + 'vw';
       
       if(isExplosion) {
@@ -179,7 +200,7 @@
       }
 
       document.body.appendChild(el);
-      setTimeout(() => el.remove(), 6000);
+      setTimeout(() => el.remove(), 5500);
     }
   </script>
 
