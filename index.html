@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Be My Valentine? 💌 QR</title>
+  <style>
+    body {
+      min-height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #fff0f5, #ffd1dc);
+      font-family: system-ui, sans-serif;
+      color: #c2185b;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 { font-size: 2.8rem; margin-bottom: 1rem; animation: pulse 3s infinite; }
+    p { font-size: 1.2rem; margin: 10px 0; max-width: 90%; }
+    
+    #qrcode {
+      background: white;
+      padding: 16px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      margin: 20px 0;
+    }
+
+    /* Style for the Download Button */
+    .download-btn {
+      background-color: #c2185b;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: transform 0.2s, background-color 0.2s;
+      text-decoration: none;
+      margin-top: 10px;
+    }
+    .download-btn:hover {
+      background-color: #a3144d;
+      transform: scale(1.05);
+    }
+    .download-btn:active {
+      transform: scale(0.95);
+    }
+
+    @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+  </style>
+</head>
+<body>
+
+  <h1>Our Valentine's Invitation 💕</h1>
+  <p>Scan this QR to open the cute invitation page!</p>
+
+  <div id="qrcode"></div>
+
+  <a id="download-link" class="download-btn" style="display: none;">Download QR Code</a>
+
+  <p style="font-size: 0.9rem; margin-top: 30px; opacity: 0.8;">
+    (Works offline • Pink theme • High error correction)
+  </p>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <script>
+    const qrContainer = document.getElementById("qrcode");
+    const downloadLink = document.getElementById("download-link");
+
+    // 1. Generate the QR Code
+    const qrcode = new QRCode(qrContainer, {
+        text: window.location.href, 
+        width: 256,
+        height: 256,
+        colorDark : "#c2185b",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+    });
+
+    // 2. Wait a split second for the QR to render, then prepare the download
+    setTimeout(() => {
+        const qrCanvas = qrContainer.querySelector('canvas');
+        if (qrCanvas) {
+            const imageData = qrCanvas.toDataURL("image/png");
+            downloadLink.href = imageData;
+            downloadLink.download = "Valentine_QR.png";
+            downloadLink.style.display = "inline-block"; // Show button once ready
+        }
+    }, 500);
+  </script>
+
+</body>
+</html>
