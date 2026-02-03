@@ -18,7 +18,7 @@
       padding: 20px;
       text-align: center;
     }
-    h1 { font-size: 2.8rem; margin-bottom: 1rem; animation: pulse 3s infinite; }
+    h1 { font-size: 2.5rem; margin-bottom: 1rem; animation: pulse 3s infinite; }
     p { font-size: 1.2rem; margin: 10px 0; max-width: 90%; }
     
     #qrcode {
@@ -29,7 +29,6 @@
       margin: 20px 0;
     }
 
-    /* Style for the Download Button */
     .download-btn {
       background-color: #c2185b;
       color: white;
@@ -42,14 +41,9 @@
       transition: transform 0.2s, background-color 0.2s;
       text-decoration: none;
       margin-top: 10px;
+      display: none; /* Hidden until QR is ready */
     }
-    .download-btn:hover {
-      background-color: #a3144d;
-      transform: scale(1.05);
-    }
-    .download-btn:active {
-      transform: scale(0.95);
-    }
+    .download-btn:hover { background-color: #a3144d; transform: scale(1.05); }
 
     @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
   </style>
@@ -61,10 +55,10 @@
 
   <div id="qrcode"></div>
 
-  <a id="download-link" class="download-btn" style="display: none;">Download QR Code</a>
+  <a id="download-link" class="download-btn">Download QR Code</a>
 
   <p style="font-size: 0.9rem; margin-top: 30px; opacity: 0.8;">
-    (Works offline • Pink theme • High error correction)
+    (Pink theme • High error correction)
   </p>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -73,9 +67,11 @@
     const qrContainer = document.getElementById("qrcode");
     const downloadLink = document.getElementById("download-link");
 
-    // 1. Generate the QR Code
+    // 1. Updated with your actual GitHub Pages URL
+    const myUrl = "https://vinahmariehernaezycoy08-hub.github.io/valentine/";
+
     const qrcode = new QRCode(qrContainer, {
-        text: window.location.href, 
+        text: myUrl, 
         width: 256,
         height: 256,
         colorDark : "#c2185b",
@@ -83,14 +79,13 @@
         correctLevel : QRCode.CorrectLevel.H
     });
 
-    // 2. Wait a split second for the QR to render, then prepare the download
+    // 2. Prepare the download link
     setTimeout(() => {
         const qrCanvas = qrContainer.querySelector('canvas');
         if (qrCanvas) {
-            const imageData = qrCanvas.toDataURL("image/png");
-            downloadLink.href = imageData;
+            downloadLink.href = qrCanvas.toDataURL("image/png");
             downloadLink.download = "Valentine_QR.png";
-            downloadLink.style.display = "inline-block"; // Show button once ready
+            downloadLink.style.display = "inline-block";
         }
     }, 500);
   </script>
