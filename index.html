@@ -9,7 +9,7 @@
       min-height: 100vh;
       margin: 0;
       background: linear-gradient(135deg, #fff0f5, #ffd1dc);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Segoe UI', cursive, sans-serif;
       color: #c2185b;
       display: flex;
       flex-direction: column;
@@ -17,70 +17,100 @@
       justify-content: center;
       padding: 20px;
       text-align: center;
-      overflow: hidden;
+      overflow-x: hidden;
     }
 
     /* Sections */
-    #qr-section, #invite-section, #success-section { display: none; }
+    #qr-section, #invite-section, #success-section { display: none; z-index: 10; }
 
-    h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+    h1 { font-size: 3rem; margin-bottom: 1rem; text-shadow: 2px 2px #ffffff; }
+    p { font-size: 1.3rem; }
     
     /* QR Section Styles */
     #qrcode {
       background: white;
       padding: 16px;
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      border: 5px solid #ff80ab;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(194, 24, 91, 0.3);
       margin: 20px 0;
     }
 
     /* Buttons */
+    .btn-container { height: 150px; position: relative; width: 100%; display: flex; justify-content: center; align-items: center; }
+    
     .btn {
-      padding: 15px 30px;
-      font-size: 1.2rem;
+      padding: 15px 40px;
+      font-size: 1.5rem;
       font-weight: bold;
       border-radius: 50px;
       cursor: pointer;
       border: none;
-      transition: 0.2s;
-      margin: 10px;
+      transition: 0.3s;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
-    .btn-yes { background-color: #c2185b; color: white; }
+    .btn-yes { background-color: #c2185b; color: white; margin-right: 20px; }
+    .btn-yes:hover { transform: scale(1.1); background-color: #e91e63; }
+    
     .btn-no { background-color: #ffffff; color: #c2185b; position: absolute; }
 
-    /* Hearts Animation */
-    .heart {
+    /* Floating Candy Hearts */
+    .candy {
       position: absolute;
-      color: #ff4081;
-      font-size: 20px;
       user-select: none;
-      animation: floatUp 3s linear forwards;
+      z-index: 1;
+      animation: floatUp 5s linear forwards;
+      font-size: 30px;
     }
+
     @keyframes floatUp {
-      0% { transform: translateY(0) scale(1); opacity: 1; }
-      100% { transform: translateY(-100vh) scale(1.5); opacity: 0; }
+      0% { transform: translateY(110vh) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+    }
+
+    /* Letter Box */
+    .letter-box {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      max-width: 500px;
+      margin-top: 20px;
+      border: 2px dashed #c2185b;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      line-height: 1.6;
     }
   </style>
 </head>
 <body>
 
   <div id="qr-section">
-    <h1>Our Valentine's Invitation 💕</h1>
-    <p>Scan this QR with your phone!</p>
+    <h1>Valentine's Invitation 💋</h1>
+    <p>Scan this with your phone!</p>
     <div id="qrcode"></div>
-    <p>(Or click the link if testing on PC)</p>
+    <p style="font-size: 0.8rem;">(Or click the link if you're on PC)</p>
   </div>
 
   <div id="invite-section">
-    <h1>Will you be my Valentine? 💖</h1>
-    <div style="height: 100px;"> <button class="btn btn-yes" onclick="showSuccess()">YES!</button>
+    <h1>Will you be my Valentine? 💞</h1>
+    <div class="btn-container">
+      <button class="btn btn-yes" onclick="showSuccess()">YES!</button>
       <button id="no-btn" class="btn btn-no" onmouseover="moveButton()" onclick="moveButton()">No</button>
     </div>
   </div>
 
   <div id="success-section">
-    <h1>YEEEYY! I LOVE YOU! 🤟❤️</h1>
-    <p>You've made me the happiest person!</p>
+    <h1>YEEEYY! I LOVE YOU! 🤟❤️ 💋</h1>
+    
+    <div class="letter-box">
+      <h3>My Dearest Valentine,</h3>
+      <p>
+        Thank you for saying YES! and for always making my heart skip a beat. 
+        You are the sweetest part of my life, like a box of candies I never want to finish. 
+        I cherish every moment we spend together, and I'm so lucky to have you.
+      </p>
+      <p><strong>I love you more than words can say!</strong></p>
+      <p>Forever yours, <br> ❤️ [Your Name]</p>
+    </div>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -89,14 +119,14 @@
     const urlParams = new URLSearchParams(window.location.search);
     const isInvite = urlParams.get('target') === 'invite';
 
-    // Update this link to YOUR actual GitHub link
+    // UPDATE THIS TO YOUR LINK
     const myGithubLink = "https://vinahmariehernaezycoy08-hub.github.io/valentine/?target=invite";
 
+    // Show correct section
     if (isInvite) {
-      // Show the invitation question
       document.getElementById('invite-section').style.display = 'block';
+      startCandyRain(); // Start background candy hearts immediately
     } else {
-      // Show the QR code
       document.getElementById('qr-section').style.display = 'block';
       new QRCode(document.getElementById("qrcode"), {
         text: myGithubLink,
@@ -107,7 +137,7 @@
       });
     }
 
-    // Function to move the "No" button
+    // Move the No Button
     function moveButton() {
       const btn = document.getElementById('no-btn');
       const x = Math.random() * (window.innerWidth - btn.offsetWidth);
@@ -116,25 +146,40 @@
       btn.style.top = y + 'px';
     }
 
-    // Function for when "Yes" is clicked
+    // "YES" Clicked
     function showSuccess() {
       document.getElementById('invite-section').style.display = 'none';
       document.getElementById('success-section').style.display = 'block';
       
-      // Create lots of hearts
-      for (let i = 0; i < 50; i++) {
-        setTimeout(createHeart, i * 100);
+      // Explosion of hearts and kisses!
+      for (let i = 0; i < 100; i++) {
+        setTimeout(() => createFloatingEmoji(true), i * 50);
       }
     }
 
-    function createHeart() {
-      const heart = document.createElement('div');
-      heart.classList.add('heart');
-      heart.innerHTML = '❤️';
-      heart.style.left = Math.random() * 100 + 'vw';
-      heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
-      document.body.appendChild(heart);
-      setTimeout(() => heart.remove(), 5000);
+    // Background Candy Hearts Rain
+    function startCandyRain() {
+      setInterval(() => createFloatingEmoji(false), 500);
+    }
+
+    function createFloatingEmoji(isExplosion) {
+      const emojis = ['💖', '🍬', '🍭', '💗', '🍓', '💋', '❤️', '💌'];
+      const el = document.createElement('div');
+      el.classList.add('candy');
+      el.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+      
+      el.style.left = Math.random() * 100 + 'vw';
+      
+      if(isExplosion) {
+        el.style.bottom = '0';
+        el.style.animationDuration = (Math.random() * 2 + 1) + 's';
+      } else {
+        el.style.top = '100vh';
+        el.style.animationDuration = (Math.random() * 3 + 4) + 's';
+      }
+
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 6000);
     }
   </script>
 
